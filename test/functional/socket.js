@@ -15,7 +15,9 @@ function sleep(ms) {
   });
 }
 
-const url = `http://localhost:${config.get('port')}`;
+// const url = `http://localhost:3004`;
+
+const url = `https://chatdev.sparkseekerapi.com`;
 
 let memberFacade;
 let messageFacade;
@@ -28,28 +30,57 @@ describe('SOCKETS', () => {
     member = await memberFacade.findOne({ where: { email: 'nikhilmisra63@gmail.com' } });
   });
   it('Should be able to connect with socket', (done) => {
-    options.query = `memberId=${member.id}`;
+    options.query = `userId=618bb78d0769380022e636f6`;
     const socket = ioc.connect(url, options);
     socket.on('connect', async () => {
-      socket.emit('subscribe', `/Member/Message/1`);
-
-      socket.on(`/Member/Message`, () => {
+      socket.on('EXCEPTION', (data) => {
+        console.log(data, 'error');
         done();
       });
-      await sleep(1000);
-      await messageFacade.create({ memberId: member.id, message: 'Hello', groupId: '1' });
+      done();
     });
   });
-  it('Should not be able to connect with socket', (done) => {
+  it('Should be able to connect with socket', (done) => {
+    options.query = `userId=617f79759e34065f6cf536c6`;
     const socket = ioc.connect(url, options);
     socket.on('connect', async () => {
-      socket.emit('subscribe', `/Member/Message/2`);
-
-      socket.on(`/Member/Message`, () => {
+      socket.on('EXCEPTION', (data) => {
+        console.log(data, 'error');
         done();
       });
-      await sleep(1000);
-      await messageFacade.create({ memberId: member.id, message: 'Hello', groupId: '1' });
+      done();
+    });
+  });
+  it('Should be able to send Start Typing event', (done) => {
+    options.query = `userId=617f79759e34065f6cf536c6`;
+    const socket = ioc.connect(url, options);
+    socket.emit('START_TYPING', {
+      chatId: '6193c6617ea24f0022d06242'
+    });
+    done();
+  });
+  it('Should be able to receive Start typing', (done) => {
+    options.query = `userId=618bb78d0769380022e636f6`;
+    const socket = ioc.connect(url, options);
+    socket.on('SERVER_START_TYPING', (data) => {
+      console.log(data, 'Success');
+      done();
+    });
+  });
+  it('Should be able to send Stop Typing event', (done) => {
+    options.query = `userId=618bb78d0769380022e636f6`;
+    const socket = ioc.connect(url, options);
+    socket.emit('STOP_TYPING', {
+      chatId: '6193c6617ea24f0022d06242'
+    });
+    done();
+  });
+  it('Should be able to receive Stop typing', (done) => {
+    options.query = `userId=617f79759e34065f6cf536c6`;
+    const socket = ioc.connect(url, options);
+    socket.on('SERVER_STOP_TYPING', (data) => {
+      console.log(data, 'Success');
+      done();
     });
   });
 });

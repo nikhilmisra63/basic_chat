@@ -18,8 +18,8 @@ module.exports = {
         bigNumberStrings: true
       },
       replication: {
-        read: [{ host: 'localhost', username: 'root', password: 'pendrive' }],
-        write: { host: 'localhost', username: 'root', password: 'pendrive' }
+        read: [{ host: 'localhost', username: 'root', password: 'Dkod3@123' }],
+        write: { host: 'localhost', username: 'root', password: 'Dkod3@123' }
       },
       logging: false
     }

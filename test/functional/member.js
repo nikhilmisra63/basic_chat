@@ -106,7 +106,7 @@ describe('MEMBER', () => {
   it('Should be able to logout', async () => {
     await request.delete(`/${version}/Member`).set({ Authorization: member.token }).expect(200);
   });
-  describe('SOCKETS', () => {
+  describe('sdsd', () => {
     it('Should be able to connect with socket', (done) => {
       options.query = `memberId=${member.id}`;
       const socket = ioc.connect(url, options);
