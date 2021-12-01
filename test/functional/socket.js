@@ -15,9 +15,9 @@ function sleep(ms) {
   });
 }
 
-// const url = `http://localhost:3004`;
+const url = `http://localhost:3004`;
 
-const url = `https://chatdev.sparkseekerapi.com`;
+// const url = `https://chatdev.sparkseekerapi.com`;
 
 let memberFacade;
 let messageFacade;
@@ -51,32 +51,42 @@ describe('SOCKETS', () => {
       done();
     });
   });
-  it('Should be able to send Start Typing event', (done) => {
-    options.query = `userId=617f79759e34065f6cf536c6`;
+  it('Should be able to send delete message event', (done) => {
+    options.query = `userId=617bf5d410b7f275b188f7b7`;
     const socket = ioc.connect(url, options);
-    socket.emit('START_TYPING', {
-      chatId: '6193c6617ea24f0022d06242'
+    socket.emit('MESSAGE_DELETE', {
+      chatId: '618ccf022fdfc63eff5db9fc',
+      messageId: '618c9c5cc3374129747994d6',
+      isDeleted: true
+    });
+    socket.on('EXCEPTION', (data) => {
+      console.log(data, 'error');
+      done();
     });
     done();
   });
-  it('Should be able to receive Start typing', (done) => {
-    options.query = `userId=618bb78d0769380022e636f6`;
+  it('Should be able to receive delete message event', (done) => {
+    options.query = `userId=6188c9f1c01d291f188e541d`;
     const socket = ioc.connect(url, options);
-    socket.on('SERVER_START_TYPING', (data) => {
+    socket.on('SERVER_MESSAGE_DELETE', (data) => {
       console.log(data, 'Success');
+      done();
+    });
+    socket.on('EXCEPTION', (data) => {
+      console.log(data, 'error');
       done();
     });
   });
   it('Should be able to send Stop Typing event', (done) => {
-    options.query = `userId=618bb78d0769380022e636f6`;
+    options.query = `userId=617bf5d410b7f275b188f7b7`;
     const socket = ioc.connect(url, options);
     socket.emit('STOP_TYPING', {
-      chatId: '6193c6617ea24f0022d06242'
+      chatId: '618ccf022fdfc63eff5db9fc'
     });
     done();
   });
   it('Should be able to receive Stop typing', (done) => {
-    options.query = `userId=617f79759e34065f6cf536c6`;
+    options.query = `userId=6188c9f1c01d291f188e541d`;
     const socket = ioc.connect(url, options);
     socket.on('SERVER_STOP_TYPING', (data) => {
       console.log(data, 'Success');
