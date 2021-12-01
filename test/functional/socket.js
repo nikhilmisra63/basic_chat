@@ -30,7 +30,7 @@ describe('SOCKETS', () => {
     member = await memberFacade.findOne({ where: { email: 'nikhilmisra63@gmail.com' } });
   });
   it('Should be able to connect with socket', (done) => {
-    options.query = `userId=618bb78d0769380022e636f6`;
+    options.query = `userId=6188c9f1c01d291f188e541d`;
     const socket = ioc.connect(url, options);
     socket.on('connect', async () => {
       socket.on('EXCEPTION', (data) => {
@@ -41,13 +41,37 @@ describe('SOCKETS', () => {
     });
   });
   it('Should be able to connect with socket', (done) => {
-    options.query = `userId=617f79759e34065f6cf536c6`;
+    options.query = `userId=617bf5d410b7f275b188f7b7`;
     const socket = ioc.connect(url, options);
     socket.on('connect', async () => {
       socket.on('EXCEPTION', (data) => {
         console.log(data, 'error');
         done();
       });
+      done();
+    });
+  });
+  it('Should be able to send Start Typing event', (done) => {
+    options.query = `userId=617bf5d410b7f275b188f7b7`;
+    const socket = ioc.connect(url, options);
+    socket.emit('START_TYPING', {
+      chatId: '618ccf022fdfc63eff5db9fc'
+    });
+    socket.on('EXCEPTION', (data) => {
+      console.log(data, 'error');
+      done();
+    });
+    done();
+  });
+  it('Should be able to receive Start typing', (done) => {
+    options.query = `userId=6188c9f1c01d291f188e541d`;
+    const socket = ioc.connect(url, options);
+    socket.on('SERVER_START_TYPING', (data) => {
+      console.log(data, 'Success');
+      done();
+    });
+    socket.on('EXCEPTION', (data) => {
+      console.log(data, 'error');
       done();
     });
   });
